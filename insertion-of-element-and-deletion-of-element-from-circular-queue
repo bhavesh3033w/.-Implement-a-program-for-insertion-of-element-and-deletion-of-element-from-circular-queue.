@@ -1,0 +1,119 @@
+# .-Implement-a-program-for-insertion-of-element-and-deletion-of-element-from-circular-queue.
+#include <iostream>
+using namespace std;
+
+class CircularQueue {
+private:
+    int* queue;
+    int front, rear, capacity;
+
+public:
+    // Constructor to initialize the queue
+    CircularQueue(int size) {
+        capacity = size;
+        queue = new int[capacity];
+        front = -1;
+        rear = -1;
+    }
+
+    // Destructor to free memory
+    ~CircularQueue() {
+        delete[] queue;
+    }
+
+    // Function to check if the queue is full
+    bool isFull() {
+        return (rear + 1) % capacity == front;
+    }
+
+    // Function to check if the queue is empty
+    bool isEmpty() {
+        return front == -1;
+    }
+
+    // Enqueue operation (Insertion)
+    void enqueue(int value) {
+        if (isFull()) {
+            cout << "Queue Overflow! Cannot insert " << value << endl;
+        } else {
+            if (front == -1) {
+                front = 0;  // If the queue is empty, set front to 0
+            }
+            rear = (rear + 1) % capacity;  // Circular increment of rear
+            queue[rear] = value;
+            cout << value << " inserted into queue." << endl;
+        }
+    }
+
+    // Dequeue operation (Deletion)
+    void dequeue() {
+        if (isEmpty()) {
+            cout << "Queue Underflow! Cannot delete element." << endl;
+        } else {
+            cout << queue[front] << " deleted from queue." << endl;
+            if (front == rear) {  // Only one element left
+                front = rear = -1;  // Reset the queue when it's empty
+            } else {
+                front = (front + 1) % capacity;  // Circular increment of front
+            }
+        }
+    }
+
+    // Function to display the queue elements
+    void display() {
+        if (isEmpty()) {
+            cout << "Queue is empty!" << endl;
+        } else {
+            cout << "Queue elements: ";
+            int i = front;
+            while (i != rear) {
+                cout << queue[i] << " ";
+                i = (i + 1) % capacity;
+            }
+            cout << queue[rear] << endl;  // Display the rear element
+        }
+    }
+};
+
+int main() {
+    int size, choice, value;
+
+    // Ask user for the size of the queue
+    cout << "Enter the size of the circular queue: ";
+    cin >> size;
+
+    // Create a CircularQueue object
+    CircularQueue q(size);
+
+    // Menu-driven program for queue operations
+    do {
+        cout << "\nQueue Operations Menu:\n";
+        cout << "1. Enqueue (Insert)\n";
+        cout << "2. Dequeue (Delete)\n";
+        cout << "3. Display Queue\n";
+        cout << "4. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                cout << "Enter value to insert: ";
+                cin >> value;
+                q.enqueue(value);
+                break;
+            case 2:
+                q.dequeue();
+                break;
+            case 3:
+                q.display();
+                break;
+            case 4:
+                cout << "Exiting program." << endl;
+                break;
+            default:
+                cout << "Invalid choice, please try again." << endl;
+        }
+    } while (choice != 4);
+
+    return 0;
+}
